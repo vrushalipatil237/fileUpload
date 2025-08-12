@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Smash The Cans</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background: #222;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+    }
+    #back-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 8px 12px;
+      background: #fff;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button id="back-btn" onclick="window.location.href='/'">⬅ Back</button>
+  <script>
+    class SmashTheCans extends Phaser.Scene {
+      constructor() { super({ key: "SmashTheCans" }); }
+      preload() {
+        this.load.image("can", "https://upload.wikimedia.org/wikipedia/commons/3/3e/Simple_soda_can.png");
+        this.load.image("hammer", "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Hammer.svg/512px-Hammer.svg.png");
+      }
+      create() {
+        this.p1 = this.physics.add.sprite(200, 300, "can").setCollideWorldBounds(true);
+        this.p1Hammer = this.physics.add.sprite(200, 260, "hammer");
+
+        this.p2 = this.physics.add.sprite(600, 300, "can").setCollideWorldBounds(true);
+        this.p2Hammer = this.physics.add.sprite(600, 260, "hammer");
+
+        this.p1Keys = this.input.keyboard.addKeys({
+          left: Phaser.Input.Keyboard.KeyCodes.A,
+          right: Phaser.Input.Keyboard.KeyCodes.D,
+          hit: Phaser.Input.Keyboard.KeyCodes.W,
+        });
+        this.p2Keys = this.input.keyboard.addKeys({
+          left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+          right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+          hit: Phaser.Input.Keyboard.KeyCodes.UP,
+        });
+
+        this.physics.add.overlap(this.p1Hammer, this.p2Hammer, () => console.log("CLANG!"));
+        this.physics.add.overlap(this.p1Hammer, this.p2, () => this.endGame("P1"));
+        this.physics.add.overlap(this.p2Hammer, this.p1, () => this.endGame("P2"));
+      }
+      update() {
+        if (this.p1Keys.left.isDown) this.p1.setVelocityX(-200);
+        else if (this.p1Keys.right.isDown) this.p1.setVelocityX(200);
+        else this.p1.setVelocityX(0);
+
+        if (this.p2Keys.left.isDown) this.p2.setVelocityX(-200);
+        else if (this.p2Keys.right.isDown) this.p2.setVelocityX(200);
+        else this.p2.setVelocityX(0);
+
+        if (this.p1Keys.hit.isDown) this.rotateHammer(this.p1Hammer, -5, this.p1);
+        else this.resetHammer(this.p1Hammer, this.p1);
+
+        if (this.p2Keys.hit.isDown) this.rotateHammer(this.p2Hammer, 5, this.p2);
+        else this.resetHammer(this.p2Hammer, this.p2);
+      }
+      rotateHammer(hammer, angle, player) {
+        hammer.rotation += Phaser.Math.DegToRad(angle);
+        hammer.x = player.x + Math.cos(hammer.rotation) * 40;
+        hammer.y = player.y + Math.sin(hammer.rotation) * -40;
+      }
+      resetHammer(hammer, player) {
+        hammer.rotation = 0;
+        hammer.x = player.x;
+        hammer.y = player.y - 40;
+      }
+      endGame(winner) {
+        alert(`${winner} wins!`);
+        this.scene.restart();
+      }
+    }
+    const config = {
+      type: Phaser.AUTO,
+      width: 800,
+      height: 600,
+      backgroundColor: "#87ceeb",
+      physics: { default: "arcade", arcade: { debug: false } },
+      scene: [SmashTheCans],
+    };
+    new Phaser.Game(config);
+  </script>
+</body>
+</html>
