@@ -1,6 +1,7 @@
 import streamlit as st
 from pdf_extractor import run_pdf_extractor
 from json_extractor import run_json_extractor
+from arcade_game import run_arcade_game
 
 st.set_page_config(page_title="ITR Tool & Arcade Game", layout="wide")
 
@@ -30,7 +31,4 @@ elif st.session_state.page == "itr":
 
 elif st.session_state.page == "game":
     st.button("⬅ Back", on_click=lambda: st.session_state.update(page="home"))
-    st.markdown(
-        load_static_html("static/arcade_game.html"),
-        unsafe_allow_html=True
-    )
+        run_arcade_game()
