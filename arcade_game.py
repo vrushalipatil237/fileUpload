@@ -71,7 +71,7 @@ def run_arcade_game():
             <rect x="480" y="{st.session_state.paddle2_y}" width="10" height="60" fill="red"/>
             
             <!-- Ball -->
-            <circle cx="{st.session_state.ball_x}" cy="{st.session_state.ball_y}" r="8" fill="green"/>
+            <circle cx="{st.session_state.ball_x}" cy="{st.session_state.ball_y}" r="8" fill="black"/>
         </svg>
         """,
         unsafe_allow_html=True
