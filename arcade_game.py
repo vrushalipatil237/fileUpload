@@ -1,7 +1,7 @@
 import streamlit as st
 
 def run_arcade_game():
-    # Initialize state only once
+    # Initialize state variables
     if "left_paddle" not in st.session_state:
         st.session_state.left_paddle = 120
     if "right_paddle" not in st.session_state:
@@ -31,7 +31,7 @@ def run_arcade_game():
         if st.button("⬇️ Right Down"):
             st.session_state.right_paddle = min(240, st.session_state.right_paddle + 20)
 
-    # Move ball
+    # Ball movement
     st.session_state.ball_x += st.session_state.ball_dx
     st.session_state.ball_y += st.session_state.ball_dy
 
@@ -39,17 +39,20 @@ def run_arcade_game():
     if st.session_state.ball_y <= 0 or st.session_state.ball_y >= 300:
         st.session_state.ball_dy *= -1
 
-    # Bounce left/right
-    if st.session_state.ball_x <= 20 and st.session_state.left_paddle <= st.session_state.ball_y <= st.session_state.left_paddle + 60:
-        st.session_state.ball_dx *= -1
-    if st.session_state.ball_x >= 470 and st.session_state.right_paddle <= st.session_state.ball_y <= st.session_state.right_paddle + 60:
+    # Bounce off paddles
+    if (st.session_state.ball_x <= 20 and 
+        st.session_state.left_paddle <= st.session_state.ball_y <= st.session_state.left_paddle + 60):
         st.session_state.ball_dx *= -1
 
-    # Reset if out
+    if (st.session_state.ball_x >= 470 and 
+        st.session_state.right_paddle <= st.session_state.ball_y <= st.session_state.right_paddle + 60):
+        st.session_state.ball_dx *= -1
+
+    # Reset ball if it goes off screen
     if st.session_state.ball_x < 0 or st.session_state.ball_x > 500:
         st.session_state.ball_x, st.session_state.ball_y = 250, 150
 
-    # Render SVG
+    # Render SVG (always show paddles + ball)
     st.markdown(f"""
     <svg width="500" height="300" style="background-color: lightblue; border: 2px solid black;">
         <!-- Left Paddle -->
