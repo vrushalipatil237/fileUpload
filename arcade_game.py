@@ -12,8 +12,14 @@ def run_arcade_game():
         st.session_state.score1 = 0
         st.session_state.score2 = 0
 
-    # Auto refresh every 300 ms
-    st.experimental_autorefresh(interval=300, key="pong_refresh")
+    # Auto refresh (works for both old & new versions)
+    try:
+        st.autorefresh(interval=300, key="pong_refresh")
+    except:
+        try:
+            st.experimental_autorefresh(interval=300, key="pong_refresh")
+        except:
+            pass  # fallback: no auto-refresh
 
     # Paddle Controls
     col1, col2 = st.columns(2)
