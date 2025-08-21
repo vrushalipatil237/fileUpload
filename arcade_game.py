@@ -63,19 +63,19 @@ def run_arcade_game():
     st.write(f"**Score:** Player 1 - {st.session_state.score1} | Player 2 - {st.session_state.score2}")
 
     # Draw game
-    st.markdown(
-        f"""
-        <svg width="500" height="300" style="border:2px solid black; background:#f0f0f0">
-            <!-- Paddles -->
-            <rect x="10" y="{st.session_state.paddle1_y}" width="10" height="60" fill="blue"/>
-            <rect x="480" y="{st.session_state.paddle2_y}" width="10" height="60" fill="red"/>
-            
-            <!-- Ball -->
-            <circle cx="{st.session_state.ball_x}" cy="{st.session_state.ball_y}" r="8" fill="black"/>
-        </svg>
-        """,
-        unsafe_allow_html=True
-    )
+    # Render the game board as SVG
+st.markdown(f"""
+<svg width="500" height="300" style="background-color: lightblue; border: 2px solid black;">
+    <!-- Left Paddle -->
+    <rect x="10" y="{st.session_state.left_paddle}" width="10" height="60" fill="blue"/>
+    
+    <!-- Right Paddle -->
+    <rect x="480" y="{st.session_state.right_paddle}" width="10" height="60" fill="red"/>
+    
+    <!-- Ball -->
+    <circle cx="{st.session_state.ball_x}" cy="{st.session_state.ball_y}" r="8" fill="black"/>
+</svg>
+""", unsafe_allow_html=True)
 
 def reset_ball():
     st.session_state.ball_x = 250
