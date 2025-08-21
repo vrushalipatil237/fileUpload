@@ -31,4 +31,4 @@ elif st.session_state.page == "itr":
 
 elif st.session_state.page == "game":
     st.button("⬅ Back", on_click=lambda: st.session_state.update(page="home"))
-        run_arcade_game()
+    run_arcade_game()
