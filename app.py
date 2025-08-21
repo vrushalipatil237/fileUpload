@@ -31,8 +31,6 @@ elif st.session_state.page == "itr":
 elif st.session_state.page == "game":
     st.button("⬅ Back", on_click=lambda: st.session_state.update(page="home"))
     st.markdown(
-        """
-        <iframe src="arcade_game.html" width="100%" height="650" style="border:none;"></iframe>
-        """,
+        load_static_html("static/arcade_game.html"),
         unsafe_allow_html=True
     )
