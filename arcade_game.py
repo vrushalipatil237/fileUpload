@@ -12,11 +12,8 @@ def run_arcade_game():
         st.session_state.score1 = 0
         st.session_state.score2 = 0
 
-    # Auto refresh every 500ms
-    st_autorefresh = st.experimental_rerun  # fallback if old Streamlit version
-    st_autorefresh = getattr(st, "autorefresh", None)
-    if st_autorefresh:
-        st_autorefresh(interval=300, key="pong_refresh")
+    # Auto refresh every 300 ms
+    st.experimental_autorefresh(interval=300, key="pong_refresh")
 
     # Paddle Controls
     col1, col2 = st.columns(2)
