@@ -4,42 +4,48 @@ import random
 def run_arcade_game():
     st.subheader("🏓 Two Player Pong Game")
 
+    # Initialize game state
     if "ball_x" not in st.session_state:
-        st.session_state.ball_x = 250
-        st.session_state.ball_y = 150
-        st.session_state.ball_dx = 3
-        st.session_state.ball_dy = 3
+        reset_ball()
         st.session_state.paddle1_y = 100
         st.session_state.paddle2_y = 100
         st.session_state.score1 = 0
         st.session_state.score2 = 0
 
-    # Controls
+    # Auto refresh every 500ms
+    st_autorefresh = st.experimental_rerun  # fallback if old Streamlit version
+    st_autorefresh = getattr(st, "autorefresh", None)
+    if st_autorefresh:
+        st_autorefresh(interval=300, key="pong_refresh")
+
+    # Paddle Controls
     col1, col2 = st.columns(2)
     with col1:
         if st.button("⬆️ P1 Up"):
-            st.session_state.paddle1_y -= 20
+            st.session_state.paddle1_y = max(0, st.session_state.paddle1_y - 20)
         if st.button("⬇️ P1 Down"):
-            st.session_state.paddle1_y += 20
+            st.session_state.paddle1_y = min(240, st.session_state.paddle1_y + 20)
 
     with col2:
         if st.button("⬆️ P2 Up"):
-            st.session_state.paddle2_y -= 20
+            st.session_state.paddle2_y = max(0, st.session_state.paddle2_y - 20)
         if st.button("⬇️ P2 Down"):
-            st.session_state.paddle2_y += 20
+            st.session_state.paddle2_y = min(240, st.session_state.paddle2_y + 20)
 
     # Move ball
     st.session_state.ball_x += st.session_state.ball_dx
     st.session_state.ball_y += st.session_state.ball_dy
 
-    # Bounce ball on top/bottom
+    # Bounce on top/bottom walls
     if st.session_state.ball_y <= 0 or st.session_state.ball_y >= 300:
         st.session_state.ball_dy *= -1
 
-    # Paddle collisions
-    if (st.session_state.ball_x <= 20 and st.session_state.paddle1_y <= st.session_state.ball_y <= st.session_state.paddle1_y + 60):
+    # Bounce on paddles
+    if (st.session_state.ball_x <= 20 and 
+        st.session_state.paddle1_y <= st.session_state.ball_y <= st.session_state.paddle1_y + 60):
         st.session_state.ball_dx *= -1
-    if (st.session_state.ball_x >= 480 and st.session_state.paddle2_y <= st.session_state.ball_y <= st.session_state.paddle2_y + 60):
+    if (st.session_state.ball_x >= 470 and 
+        st.session_state.paddle2_y <= st.session_state.ball_y <= st.session_state.paddle2_y + 60):
         st.session_state.ball_dx *= -1
 
     # Scoring
@@ -50,10 +56,10 @@ def run_arcade_game():
         st.session_state.score1 += 1
         reset_ball()
 
-    # Display
+    # Show scores
     st.write(f"**Score:** Player 1 - {st.session_state.score1} | Player 2 - {st.session_state.score2}")
 
-    # Draw game area
+    # Draw game
     st.markdown(
         f"""
         <svg width="500" height="300" style="border:2px solid black; background:#f0f0f0">
